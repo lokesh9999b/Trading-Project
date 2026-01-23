@@ -1,0 +1,15 @@
+# Dependency folders
+node_modules/
+dist/
+
+# Local Database Data (NEVER push this to GitHub)
+mongo_data/
+mongo_records/
+kafka_data/
+
+# Secrets and Keys
+.env
+
+# OS junk
+.DS_Store
+Thumbs.db
