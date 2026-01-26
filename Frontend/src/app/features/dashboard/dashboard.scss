@@ -1,0 +1,27 @@
+.dashboard-container {
+  padding: 20px;
+  background-color: #0d1117; /* Dark background */
+  color: white;
+  min-height: 100vh;
+}
+
+.price-card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  padding: 30px;
+  border-radius: 12px;
+  width: 300px;
+  text-align: center;
+}
+
+.price {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #238636; /* Trading green */
+  margin: 10px 0;
+}
+
+.symbol {
+  font-size: 1.2rem;
+  color: #8b949e;
+}

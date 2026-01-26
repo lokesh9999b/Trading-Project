@@ -1,0 +1,13 @@
+<div class="dashboard-container">
+  <h1>Live Trading Desk</h1>
+
+  <div *ngIf="trades$ | async as trade; else loading" class="price-card">
+    <div class="symbol">{{ trade.symbol }}</div>
+    <div class="price">${{ trade.price | number:'1.2-2' }}</div>
+    <div class="timestamp">Last updated: {{ trade.time | date:'mediumTime' }}</div>
+  </div>
+
+  <ng-template #loading>
+    <div class="loader">Waiting for live data from Kafka...</div>
+  </ng-template>
+</div>
