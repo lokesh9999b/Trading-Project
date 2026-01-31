@@ -1,0 +1,11 @@
+<div class="dashboard-container">
+  <h1>Live BTC Terminal</h1>
+  
+  <div class="main-layout">
+    <app-trading-chart></app-trading-chart>
+    
+    <div *ngIf="trades$ | async as trade" class="mini-card">
+      Current: {{ trade.price | currency }}
+    </div>
+  </div>
+</div>

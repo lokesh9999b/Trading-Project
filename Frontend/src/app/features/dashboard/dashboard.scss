@@ -1,27 +1,63 @@
+/* dashboard.scss */
 .dashboard-container {
-  padding: 20px;
-  background-color: #0d1117; /* Dark background */
+  padding: 24px;
+  background-color: #0d1117;
   color: white;
   min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+}
+
+h1 {
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+/* Create a flex container to hold Chart (Left) and Sidebar (Right) */
+.main-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start; /* Keeps items at the top */
+}
+
+.chart-wrapper {
+  flex: 3; /* Takes up 75% of width */
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 12px;
+  min-height: 500px; /* Ensure there is room for the chart */
+}
+
+.sidebar {
+  flex: 1; /* Takes up 25% of width */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .price-card {
   background: #161b22;
   border: 1px solid #30363d;
-  padding: 30px;
+  padding: 24px;
   border-radius: 12px;
-  width: 300px;
-  text-align: center;
-}
-
-.price {
-  font-size: 2.5rem;
-  font-weight: bold;
-  color: #238636; /* Trading green */
-  margin: 10px 0;
+  text-align: left;
 }
 
 .symbol {
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   color: #8b949e;
+  text-transform: uppercase;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #238636;
+  margin: 8px 0;
+}
+
+.timestamp {
+  font-size: 0.8rem;
+  color: #484f58;
 }
