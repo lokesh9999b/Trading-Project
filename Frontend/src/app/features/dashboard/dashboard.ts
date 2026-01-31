@@ -3,13 +3,12 @@ import { Observable } from 'rxjs';
 import { WebsocketService } from '../../core/services/websocket';
 import { Trade } from '../../core/models/trade.interface';
 import { CommonModule } from '@angular/common';
-// Import your chart component here
-import { TradingChartComponent } from './components/trading-chart/trading-chart'; 
+import { TradingChartComponent } from './components/trading-chart/trading-chart';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TradingChartComponent], // Add it here
+  imports: [CommonModule, TradingChartComponent],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
