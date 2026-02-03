@@ -252,6 +252,7 @@ $border-glass: rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  max-height: 320px; // Prevent unlimited expansion
 
   h3 {
     margin: 0;
