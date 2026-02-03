@@ -2,7 +2,10 @@
 FROM node:20-alpine as build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+# Increase timeout for slow connections
+RUN npm config set fetch-retry-mintimeout 20000 \
+    && npm config set fetch-retry-maxtimeout 120000 \
+    && npm install
 COPY . .
 # Build for production
 RUN npm run build
