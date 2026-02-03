@@ -1,6 +1,6 @@
 const { Kafka } = require('kafkajs');
 const { createClient } = require('redis');
-const WebSocket = require('ws'); 
+const WebSocket = require('ws');
 const { MongoClient } = require('mongodb');
 const http = require('http');
 
@@ -14,11 +14,61 @@ const kafka = new Kafka({
 });
 const producer = kafka.producer();
 const consumer = kafka.consumer({ groupId: 'db-saver-group' });
-const redisClient = createClient({ url: `redis://redis:6379` });
+// Two clients for Pub/Sub (Subscriber needs its own connection)
+const publisher = createClient({ url: `redis://redis:6379` });
+const subscriber = publisher.duplicate();
 const mongoClient = new MongoClient('mongodb://mongodb:27017');
 
-// --- 2. Create the HTTP Server & WebSocket Server ---
-const server = http.createServer((req, res) => {
+// --- 2. Cre ate the HTTP Server & WebSocket Server ---
+const server = http.createServer(async (req, res) => {
+    // CORS Headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        res.end();
+        return;
+    }
+
+    const url = new URL(req.url, `http://${req.headers.host}`);
+
+    if (url.pathname === '/api/history' && req.method === 'GET') {
+        try {
+            const startStr = url.searchParams.get('start');
+            const endStr = url.searchParams.get('end');
+
+            if (!startStr || !endStr) {
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Missing start or end query params' }));
+                return;
+            }
+
+            const db = mongoClient.db('trading_db');
+            const tradesCollection = db.collection('trades');
+
+            // Query MongoDB
+            const trades = await tradesCollection.find({
+                timestamp: {
+                    $gte: new Date(startStr),
+                    $lte: new Date(endStr)
+                }
+            })
+                .sort({ timestamp: 1 })
+                .limit(5000) // Cap to prevent crashing browser
+                .toArray();
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(trades));
+        } catch (err) {
+            console.error('API Error:', err);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: err.message }));
+        }
+        return;
+    }
+
     res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Backend Active with WebSocket Support');
 });
@@ -41,14 +91,22 @@ wss.on('connection', (ws) => {
 // --- 3. Main Logic ---
 async function start() {
     try {
-        await redisClient.connect();
+        await publisher.connect();
+        await subscriber.connect();
         await producer.connect();
         await mongoClient.connect();
         await consumer.connect();
-        
+
         const db = mongoClient.db('trading_db');
         const tradesCollection = db.collection('trades');
         console.log("✅ All systems connected");
+
+        // --- Redis Subscription for Broadcasting ---
+        await subscriber.subscribe('market-updates', (message) => {
+            const trade = JSON.parse(message);
+            broadcastToClients(trade);
+            console.log(`🚀 Broadcasted via Redis: ${trade.symbol}`);
+        });
 
         await consumer.subscribe({ topic: 'market-updates', fromBeginning: true });
         let tradeBuffer = [];
@@ -79,7 +137,7 @@ async function start() {
 
         finnhubWs.on('message', async (data) => {
             const message = JSON.parse(data);
-            
+
             if (message.type === 'trade') {
                 // FIXED: Explicitly map the 'v' field for volume
                 const trade = {
@@ -90,13 +148,17 @@ async function start() {
                 };
 
                 try {
-                    await redisClient.set('latest_btc_price', JSON.stringify(trade));
+                    // Cache latest price
+                    await publisher.set('latest_btc_price', JSON.stringify(trade));
+
+                    // SAVE to DB via Kafka
                     await producer.send({
                         topic: 'market-updates',
                         messages: [{ value: JSON.stringify(trade) }],
                     });
-                    broadcastToClients(trade);
-                    console.log(`🚀 Broadcasted: ${trade.symbol} | Vol: ${trade.volume}`);
+
+                    // STREAM to Frontend via Redis Pub/Sub
+                    await publisher.publish('market-updates', JSON.stringify(trade));
                 } catch (streamErr) {
                     console.error('❌ Streaming Error:', streamErr.message);
                 }

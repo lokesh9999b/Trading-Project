@@ -16,7 +16,7 @@ export class TradingChartComponent implements AfterViewInit, OnDestroy {
   private candleSeries: any;
   private tradeSub!: Subscription;
   private currentCandle: any = null;
-  private selectedInterval = 60; 
+  private selectedInterval = 60;
 
   constructor(private wsService: WebsocketService, private ngZone: NgZone) { }
 
@@ -24,24 +24,22 @@ export class TradingChartComponent implements AfterViewInit, OnDestroy {
     this.chart = createChart(this.chartContainer.nativeElement, {
       width: this.chartContainer.nativeElement.clientWidth,
       height: 500,
-      layout: { 
-        background: { type: ColorType.Solid, color: '#0d1117' },
-        textColor: '#d1d4dc',
+      layout: {
+        background: { type: ColorType.Solid, color: '#050511' }, // Match $bg-deep
+        textColor: '#8b949e',
       },
       grid: {
-        vertLines: { color: '#1f2937' },
-        horzLines: { color: '#1f2937' },
+        vertLines: { color: 'rgba(255, 255, 255, 0.05)' },
+        horzLines: { color: 'rgba(255, 255, 255, 0.05)' },
       },
       localization: {
         locale: 'en-IN',
-        timeFormatter: (timestamp: number) => {
-          return new Date(timestamp * 1000).toLocaleString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-          });
-        }
+        timeFormatter: (time: number) => {
+          const date = new Date(time * 1000);
+          return date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: false });
+        },
       },
-      timeScale: { timeVisible: true, borderColor: '#30363d' }
+      timeScale: { timeVisible: true, borderColor: 'rgba(255, 255, 255, 0.1)' }
     });
 
     // FIXED: Modern API (v4/v5)
@@ -59,13 +57,13 @@ export class TradingChartComponent implements AfterViewInit, OnDestroy {
     });
 
     window.addEventListener('resize', () => {
-        this.chart.applyOptions({ width: this.chartContainer.nativeElement.clientWidth });
+      this.chart.applyOptions({ width: this.chartContainer.nativeElement.clientWidth });
     });
   }
 
   public setTimeframe(minutes: number) {
     this.selectedInterval = minutes * 60;
-    this.candleSeries.setData([]); 
+    this.candleSeries.setData([]);
     this.currentCandle = null;
   }
 
