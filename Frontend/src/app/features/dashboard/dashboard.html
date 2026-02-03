@@ -1,12 +1,12 @@
 <div class="dashboard-container">
   <header class="crypto-header">
     <div class="brand">
-      <span class="icon">⚡</span> 
+      <span class="icon">⚡</span>
       <h2>CryptoTerminal <span class="badge">PRO</span></h2>
     </div>
     <div class="connection-status">
-      <span class="dot" [class.live]="latestTrade"></span> 
-      {{ latestTrade ? 'Live' : 'Connecting to Kafka...' }}
+      <span class="dot" [class.live]="latestTrade"></span>
+      {{ (isConnected$ | async) ? 'Live' : 'Connecting to Kafka...' }}
     </div>
   </header>
 
@@ -14,9 +14,12 @@
     <div class="chart-section">
       <div class="chart-toolbar">
         <div class="time-filters">
-          <button class="time-btn" [class.active]="activeTimeframe === '1m'" (click)="onTimeframeChange('1m', 1)">1m</button>
-          <button class="time-btn" [class.active]="activeTimeframe === '5m'" (click)="onTimeframeChange('5m', 5)">5m</button>
-          <button class="time-btn" [class.active]="activeTimeframe === '1H'" (click)="onTimeframeChange('1H', 60)">1H</button>
+          <button class="time-btn" [class.active]="activeTimeframe === '1m'"
+            (click)="onTimeframeChange('1m', 1)">1m</button>
+          <button class="time-btn" [class.active]="activeTimeframe === '5m'"
+            (click)="onTimeframeChange('5m', 5)">5m</button>
+          <button class="time-btn" [class.active]="activeTimeframe === '1H'"
+            (click)="onTimeframeChange('1H', 60)">1H</button>
         </div>
       </div>
 
@@ -49,14 +52,34 @@
 
       <div class="recent-activity">
         <h3>Market Activity</h3>
+        <div class="activity-header">
+          <span>Time</span>
+          <span>Price</span>
+          <span class="text-right">Vol</span>
+        </div>
         <ul class="activity-list">
-          <li *ngFor="let trade of recentTrades">
+          <li *ngFor="let trade of recentTrades" [class.buy]="true">
             <span class="time">{{ trade.time | date:'HH:mm:ss' }}</span>
-            <span class="price">${{ trade.price | number:'1.2-2' }}</span>
+            <span class="price">{{ trade.price | currency:'USD':'symbol':'1.2-2' }}</span>
             <span class="vol">{{ trade.volume | number:'1.4-4' }}</span>
           </li>
         </ul>
       </div>
     </aside>
   </div>
+
+  <!-- Historical Section -->
+  <div class="historical-section">
+    <div class="section-header">
+      <h3>Historical Analysis</h3>
+      <div class="date-controls">
+        <label>From: <input type="date" [(ngModel)]="startDate"></label>
+        <label>To: <input type="date" [(ngModel)]="endDate"></label>
+      </div>
+    </div>
+    <div class="history-chart-card">
+      <app-historical-chart [startDate]="startDate" [endDate]="endDate"></app-historical-chart>
+    </div>
+  </div>
+
 </div>
