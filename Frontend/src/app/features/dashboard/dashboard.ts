@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, NgZone, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxj';
+import { Observable } from 'rxjs';
 import { WebsocketService } from '../../core/services/websocket';
 import { Trade } from '../../core/models/trade.interface';
 import { TradingChartComponent } from './components/trading-chart/trading-chart';
