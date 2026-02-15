@@ -1,25 +1,13 @@
-/* --- Premium Design System --- */
-
 // 1. Color Palette (Deep Space & Neon)
-$bg-deep: #050511; // Very dark blue/black
-$bg-glass: rgba(22, 27, 34, 0.7); // Glass effect base
+$bg-deep: #050511;
+$bg-glass: rgba(22, 27, 34, 0.7);
 $bg-glass-strong: rgba(22, 27, 34, 0.95);
-$accent-neon: #00f2ff; // Cyan Neon
+$accent-neon: #00f2ff;
 $text-primary: #ffffff;
 $text-secondary: #8b949e;
-$green-neon: #00ff9d; // Electric Green
-$red-neon: #ff0055; // Electric Red
+$green-neon: #00ff9d;
+$red-neon: #ff0055;
 $border-glass: rgba(255, 255, 255, 0.08);
-
-// 2. Mixins
-@mixin glass-panel {
-  background: $bg-glass;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid $border-glass;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  border-radius: 12px;
-}
 
 @mixin neon-text($color) {
   color: $color;
@@ -37,7 +25,7 @@ $border-glass: rgba(255, 255, 255, 0.08);
 
 // 4. Header
 .crypto-header {
-  @include glass-panel;
+  // @include glass-panel; (Moved to HTML utility class)
   margin: 10px 20px;
   padding: 15px 30px;
   display: flex;
@@ -79,7 +67,7 @@ $border-glass: rgba(255, 255, 255, 0.08);
   }
 
   .connection-status {
-    @include glass-panel;
+    // @include glass-panel;
     background: rgba(0, 0, 0, 0.3);
     padding: 6px 14px;
     border-radius: 20px;
@@ -117,33 +105,51 @@ $border-glass: rgba(255, 255, 255, 0.08);
 
 // 6. Chart Section
 .chart-section {
-  @include glass-panel;
+  // @include glass-panel;
   overflow: hidden; // Round corners for chart
   display: flex;
   flex-direction: column;
 }
 
 .chart-toolbar {
-  padding: 15px 20px;
+  padding: 12px 20px;
   border-bottom: 1px solid $border-glass;
   background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
 
-  .time-filters {
+  .toolbar-group {
     display: flex;
-    gap: 5px;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 4px;
-    border-radius: 8px;
+    align-items: center;
+    gap: 12px;
+  }
 
-    .time-btn {
+  .divider-vertical {
+    width: 1px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  // Segmented Control (Time Filters)
+  .segmented-control {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px;
+    border-radius: 8px;
+    gap: 2px;
+
+    button {
       background: transparent;
       border: none;
       color: $text-secondary;
-      padding: 6px 14px;
+      padding: 5px 12px;
       cursor: pointer;
       font-family: 'Roboto Mono', monospace;
       font-weight: 600;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       border-radius: 6px;
       transition: all 0.2s;
 
@@ -152,11 +158,208 @@ $border-glass: rgba(255, 255, 255, 0.08);
       }
 
       &.active {
-        background: $accent-neon;
-        color: black;
-        box-shadow: 0 0 10px rgba($accent-neon, 0.4);
+        background: rgba(255, 255, 255, 0.1);
+        color: $accent-neon;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
     }
+  }
+
+  // Styled Dropdown
+  .chart-type-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    select {
+      appearance: none;
+      background: transparent;
+      border: none;
+      color: $text-primary;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding-right: 20px;
+      cursor: pointer;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+
+      option {
+        background: $bg-deep;
+        color: $text-primary;
+      }
+    }
+
+    .dropdown-arrow {
+      position: absolute;
+      right: 0;
+      pointer-events: none;
+      font-size: 0.6rem;
+      color: $text-secondary;
+    }
+  }
+
+  // Quick Ranges
+  .quick-ranges {
+    display: flex;
+    gap: 4px;
+
+    button {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: $text-secondary;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        border-color: $accent-neon;
+        color: $accent-neon;
+      }
+    }
+  }
+
+  // Custom Date Trigger
+  .custom-date-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px 12px;
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .icon {
+      font-size: 0.9rem;
+      margin-right: 4px;
+    }
+
+    .date-label {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.75rem;
+      color: $text-primary;
+    }
+
+    .separator {
+      color: $text-secondary;
+      font-size: 0.8rem;
+    }
+
+    // Secretly overlay the date inputs
+    .hidden-date-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+
+      // Trick to make the second input accessible? 
+      // Actually, standard date inputs are hard to custom style perfectly this way.
+      // A better approach for "Pro" feel is a custom calendar component, 
+      // but for now, we'll just stack them or let users click.
+      // Simplification: Let's make them visible but styled minimally, 
+      // overlaying the text is tricky without JS logic to handle clicks.
+      // ADJUSTMENT: We'll make the inputs transparent but clickable on top of specific areas
+      // or just remove the text labels and style the inputs themselves better.
+    }
+
+    // REVISED: Make the inputs visible but styled to look like text
+    input[type="date"] {
+      background: transparent;
+      border: none;
+      color: transparent; // Hide text, use the span labels? No, logic is complex.
+      // Let's just style the inputs to be nice.
+      color: $text-primary;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.75rem;
+      width: 85px;
+      outline: none;
+
+      &::-webkit-calendar-picker-indicator {
+        display: none; // Hide default icon, we use our own or verify hover
+      }
+    }
+  }
+
+  .back-to-live-btn {
+    background: $green-neon;
+    color: black;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba($green-neon, 0.3);
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba($green-neon, 0.5);
+    }
+  }
+}
+
+.chart-loading-overlay,
+.chart-error-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(5, 5, 17, 0.8);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  color: $text-primary;
+  gap: 15px;
+  border-radius: 12px;
+}
+
+.chart-error-overlay {
+  color: $red-neon;
+
+  button {
+    background: rgba($red-neon, 0.2);
+    border: 1px solid $red-neon;
+    color: white;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+
+    &:hover {
+      background: rgba($red-neon, 0.4);
+    }
+  }
+}
+
+.spinner {
+  width: 30px;
+  height: 30px;
+  border: 3px solid rgba($accent-neon, 0.3);
+  border-radius: 50%;
+  border-top-color: $accent-neon;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -174,7 +377,7 @@ $border-glass: rgba(255, 255, 255, 0.08);
 }
 
 .stat-card.main-price {
-  @include glass-panel;
+  // @include glass-panel;
   padding: 24px;
   text-align: center;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
@@ -205,20 +408,35 @@ $border-glass: rgba(255, 255, 255, 0.08);
   }
 }
 
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+// Compact Stats
+.stats-compact {
+  // @include glass-panel;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 
-  .stat-item {
-    @include glass-panel;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.02);
-    transition: transform 0.2s;
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    &:hover {
-      transform: translateY(-2px);
-      background: rgba(255, 255, 255, 0.04);
+  .divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.05);
+    width: 100%;
+  }
+
+  .stat-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    &.text-right {
+      text-align: right;
+      align-items: flex-end;
     }
 
     .label {
@@ -226,20 +444,22 @@ $border-glass: rgba(255, 255, 255, 0.08);
       text-transform: uppercase;
       color: $text-secondary;
       letter-spacing: 0.5px;
+      font-weight: 600;
+      opacity: 0.8;
     }
 
     .value {
-      font-size: 1.1rem;
+      font-size: 0.95rem;
       font-weight: 600;
-      margin-top: 6px;
       font-family: 'Roboto Mono', monospace;
+      color: $text-primary;
 
       &.text-success {
-        @include neon-text($green-neon);
+        color: $green-neon;
       }
 
       &.text-danger {
-        @include neon-text($red-neon);
+        color: $red-neon;
       }
     }
   }
@@ -247,49 +467,49 @@ $border-glass: rgba(255, 255, 255, 0.08);
 
 // 8. Activity (Order Book Style)
 .recent-activity {
-  @include glass-panel;
+  // @include glass-panel;
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  max-height: 320px; // Prevent unlimited expansion
+  max-height: 450px; // Slightly taller
 
   h3 {
     margin: 0;
-    padding: 15px 20px;
-    font-size: 0.8rem;
+    padding: 12px 15px;
+    font-size: 0.75rem;
     color: $text-secondary;
     background: rgba(0, 0, 0, 0.2);
     border-bottom: 1px solid $border-glass;
     letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
   }
 
   .activity-header {
     display: flex;
     justify-content: space-between;
     padding: 8px 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 
     span {
       color: $text-secondary;
-      font-size: 0.75rem;
-      font-weight: 600;
+      font-size: 0.7rem;
+      font-weight: 700;
       text-transform: uppercase;
       font-family: 'Inter', sans-serif;
       flex: 1;
+      opacity: 0.7;
 
       &:first-child {
         flex: 0 0 70px;
       }
 
-      // Time width
       &:last-child {
         text-align: right;
         flex: 0 0 60px;
       }
-
-      // Vol width
     }
   }
 
@@ -299,7 +519,6 @@ $border-glass: rgba(255, 255, 255, 0.08);
     padding: 0;
     margin: 0;
 
-    // Custom Scrollbar
     &::-webkit-scrollbar {
       width: 4px;
     }
@@ -312,39 +531,51 @@ $border-glass: rgba(255, 255, 255, 0.08);
     li {
       display: flex;
       justify-content: space-between;
-      padding: 8px 15px;
+      padding: 6px 15px; // Tighter padding
       font-size: 0.8rem;
       font-family: 'Roboto Mono', monospace;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-      transition: background 0.1s;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.015);
+      position: relative; // For depth bar positioning
+      z-index: 1;
 
-      &:hover {
-        background: rgba(255, 255, 255, 0.03);
+      // Depth Bar
+      .depth-bar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent 0%, rgba($green-neon, 0.08) 100%);
+        z-index: -1; // Behind text
+        transition: width 0.3s ease-out;
       }
 
-      animation: flashNew 0.5s ease-out;
+      &:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      animation: flashNew 0.3s ease-out;
 
       span {
         flex: 1;
       }
 
-      // Distribute width
-
       .time {
         color: $text-secondary;
-        opacity: 0.7;
-        flex: 0 0 70px; // Fixed width for time
+        opacity: 0.6;
+        flex: 0 0 70px;
+        font-size: 0.75rem;
       }
 
       .price {
-        color: #fff;
-        font-weight: 600;
+        color: #fff; // Or strictly green/red based on trade side
+        font-weight: 500;
       }
 
       .vol {
         color: $text-secondary;
         text-align: right;
-        flex: 0 0 60px; // Fixed width for Volume
+        flex: 0 0 60px;
+        opacity: 0.9;
       }
     }
   }
@@ -376,58 +607,3 @@ $border-glass: rgba(255, 255, 255, 0.08);
 }
 
 // 10. Historical Section
-.historical-section {
-  margin: 40px 20px 40px 20px; // Increased top margin for separation
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-
-    h3 {
-      font-size: 1.2rem;
-      color: $text-primary;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    .date-controls {
-      display: flex;
-      gap: 15px;
-      @include glass-panel;
-      padding: 10px 20px;
-
-      label {
-        color: $text-secondary;
-        font-size: 0.85rem;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-
-        input {
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid $border-glass;
-          color: white;
-          padding: 5px 10px;
-          border-radius: 6px;
-          font-family: 'Inter', sans-serif;
-
-          &::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-          }
-        }
-      }
-    }
-  }
-
-  .history-chart-card {
-    @include glass-panel;
-    padding: 20px;
-    background: radial-gradient(ellipse at bottom, rgba($accent-neon, 0.05) 0%, transparent 70%);
-  }
-}

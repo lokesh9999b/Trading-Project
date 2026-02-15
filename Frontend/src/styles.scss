@@ -1,1 +1,35 @@
-/* You can add global styles to this file, and also import other style files */
+/* --- Premium Design System --- */
+
+// 1. Color Palette (Deep Space & Neon)
+$bg-deep: #050511; // Very dark blue/black
+$bg-glass: rgba(22, 27, 34, 0.7); // Glass effect base
+$bg-glass-strong: rgba(22, 27, 34, 0.95);
+$accent-neon: #00f2ff; // Cyan Neon
+$text-primary: #ffffff;
+$text-secondary: #8b949e;
+$green-neon: #00ff9d; // Electric Green
+$red-neon: #ff0055; // Electric Red
+$border-glass: rgba(255, 255, 255, 0.08);
+
+// 2. Mixins -> Converted to Utility Classes for optimization
+.glass-panel {
+    background: $bg-glass;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid $border-glass;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border-radius: 12px;
+}
+
+@mixin neon-text($color) {
+    color: $color;
+    text-shadow: 0 0 10px rgba($color, 0.5);
+}
+
+// Global reset/base
+body {
+    background-color: $bg-deep;
+    color: $text-primary;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+}
